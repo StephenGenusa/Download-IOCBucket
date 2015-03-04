@@ -16,7 +16,7 @@ import requests
 from BeautifulSoup import BeautifulSoup
 
 # Change this path to reflect the pathname where the IOC files are stored
-ioc_data_path = '/data/IOCs'
+ioc_data_path = '/sec-fs/data/IOCs'
 
 IOC_BUCKET = 'https://www.iocbucket.com'
 
@@ -57,13 +57,15 @@ def main(ioc_data_path):
                 ioc_href = IOC_BUCKET + href
                 print "\nGetting new IOC", ioc_href
                 ioc_http_request = requests.get(ioc_href)
-                # Find the base64 encoded URL for the download
+                # Find the base64 encoded URL for the download if it exists
                 match = re.search("Base64\.decode\('(.{10,100}?)'", ioc_http_request.content, re.DOTALL | re.MULTILINE)
                 if match:
                     base64d_url = match.groups(0)[0]
+                    # Decode the IOC download URL
                     real_url = IOC_BUCKET + base64.b64decode(base64d_url)
-                    # Grab the IOC file
+                    # Grab the IOC file via HTTP
                     ioc_http_request = requests.get(real_url)
+                    # Avoid duplication by saving the hash to our check-list
                     hashes_already_checked.append(ioc_search_hash)
                     # If the file actually exists (ecaf59784723054267f5c06f34d5315e2f00cec2 does not)
                     #   then save it to the proper filename
@@ -75,7 +77,8 @@ def main(ioc_data_path):
                     else:
                         # This means there is an IOC page but no IOC file behind it
                         print "Invalid IOC pointer. IOC does not exist:", href
-            else:
+            else: # A file with the hash already exists so skip it
+                # Avoid duplication by saving the hash to our check-list
                 hashes_already_checked.append(ioc_search_hash)
                 sys.stdout.write('.')       
     print "\nDone downloading IOCs from IOCBucket.com"
