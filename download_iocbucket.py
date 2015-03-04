@@ -15,7 +15,9 @@ import base64
 import requests
 from BeautifulSoup import BeautifulSoup
 
+# Change this path to reflect the pathname where the IOC files are stored
 ioc_data_path = '/data/IOCs'
+
 IOC_BUCKET = 'https://www.iocbucket.com'
 
 def main(ioc_data_path):
