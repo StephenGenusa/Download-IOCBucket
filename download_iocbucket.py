@@ -27,7 +27,7 @@ def main(ioc_data_path):
     
     # Request a list of the current IOCs on IOCBucket.com
     print "Requesting list of current IOCs on IOCBucket.com"
-    ioc_search_http_request = requests.post('https://www.iocbucket.com/search', {'search':''})
+    ioc_search_http_request = requests.post(IOC_BUCKET + '/search', {'search':''})
     
     # Parse the HTML
     soup = BeautifulSoup(ioc_search_http_request.content)
