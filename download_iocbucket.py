@@ -43,6 +43,7 @@ def main(ioc_data_path):
         href = link.get("href")
         if href != None and href.find('/iocs/') > -1:
             
+            ioc_already_exists = False
             # Parse out just the hash
             ioc_search_hash = href.replace('/iocs/', '')
             # See if the file already exists in the local IOC directory
@@ -50,8 +51,6 @@ def main(ioc_data_path):
                 if ioc_file.find(ioc_search_hash) > -1:
                     ioc_already_exists = True
                     break
-                else:
-                    ioc_already_exists = False
             # If it does not exist then grab the IOC description page        
             if not ioc_already_exists and not ioc_search_hash in hashes_already_checked:
                 ioc_href = IOC_BUCKET + href
@@ -70,7 +69,7 @@ def main(ioc_data_path):
                     # If the file actually exists (ecaf59784723054267f5c06f34d5315e2f00cec2 does not)
                     #   then save it to the proper filename
                     if 'content-disposition' in ioc_http_request.headers:
-                        ioc_filename = ioc_http_request.headers['content-disposition'].split('; ')[1].replace('filename=', '').replace('"', '')
+                        ioc_filename = ioc_http_request.headers['content-disposition'].split('; ')[1].replace('filename=', '').replace('"', '').replace('/', '_').replace('\\', '_')
                         if not os.path.isfile(os.path.join(ioc_data_path, ioc_filename)):
                             open(os.path.join(ioc_data_path, ioc_filename), "wb").write(ioc_http_request.content)
                             print "New IOC saved", ioc_filename
