@@ -12,7 +12,7 @@ Requirements:
 
 Installable via pip
 
-Usage:
+# Usage:
 
 1) Modify the variable ioc_data_path to reflect the directory where you want to download the IOCs
 2) Run the script (eg. python download_iobucket.py)
