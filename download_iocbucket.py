@@ -69,7 +69,7 @@ def main(ioc_data_path):
                     # If the file actually exists (ecaf59784723054267f5c06f34d5315e2f00cec2 does not)
                     #   then save it to the proper filename
                     if 'content-disposition' in ioc_http_request.headers:
-                        ioc_filename = ioc_http_request.headers['content-disposition'].split('; ')[1].replace('filename=', '').replace('"', '').replace('/', '_').replace('\\', '_').replace('?', '_')
+                        ioc_filename = ioc_http_request.headers['content-disposition'].split('; ')[1].replace('filename=', '').replace('"', '').replace('/', '_').replace('\\', '_').replace('?', '_').replace(':', '_')
                         if not os.path.isfile(os.path.join(ioc_data_path, ioc_filename)):
                             open(os.path.join(ioc_data_path, ioc_filename), "wb").write(ioc_http_request.content)
                             print "New IOC saved", ioc_filename
